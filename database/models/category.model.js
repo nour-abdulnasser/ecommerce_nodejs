@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
-const schema = new mongoose.Schema(
+const { Schema, model } = mongoose;
+
+const categorySchema = new Schema(
   {
     name: {
       type: String,
@@ -14,11 +16,30 @@ const schema = new mongoose.Schema(
       lowercase: true,
       required: true,
       unique: true,
-
     },
-    image: String,
+    CreatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: false, // To Do: Change to true after adding authentication
+    },
+    images: [
+      {
+        secure_url: {
+          type: String,
+          required: true,
+        },
+        public_id: {
+          type: String,
+          required: true,
+          unique: true,
+        },
+      },
+    ],
   },
   { timestamps: true, versionKey: false }
 );
 
-export const Category = mongoose.model("Category", schema);
+export const Category =
+  mongoose.model.Category || model("Category", categorySchema); 
+  //  reuse an existing model if it’s already defined OR create it if not
+  // this line helps avoid errors due to defining a model multiple times when restarting the server
