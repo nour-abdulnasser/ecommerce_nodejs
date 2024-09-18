@@ -1,5 +1,5 @@
 # E-Commerce Project Using Node.js
-Simple e-commerce backend project in Nodejs. 
+Simple e-commerce backend project in Nodejs.
 ## Tools
 This project uses:
 - Nodejs for the backend environment.
@@ -10,15 +10,25 @@ This project uses:
  
 ## Installation and Setup
 1. Clone repository
-2. Install dependencies
+
    ```bash
+    git clone https://github.com/nour-abdulnasser/ecommerce_nodejs.git
+    ```
+   
+2. Install dependencies
+
+    ```bash
    npm i
    ```
+    
 3. Run the server.
+   
    ```bash
    nodemon
    ```
+
    OR
+
    ```bash
    npm start
    ```
