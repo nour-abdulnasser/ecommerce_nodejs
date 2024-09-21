@@ -6,26 +6,8 @@ import { Category } from "../../../database/models/category.model.js";
 
 import { cloudinaryConfig } from "../../utils/index.js";
 
-// const addCategory = async (req, res, next) => {
-//   let category = new Category(req.body); // a new instance of Category, req.body is what we want to store
-//   console.log(category); // {name: "nour"}
-
-//   // you can make changes here before saving
-//   //   category.name = "noura";
-
-//   await category.save(); // document is saved
-//   console.log(category); // {name: "nour", createdAt: xxx}
-
-//   res.json({ message: "successfully saved one category.", category });
-// };
-
-
 /**
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
+ * @api {POST} Add single category
  */
 
 const addCategory = async (req, res, next) => {
@@ -33,7 +15,6 @@ const addCategory = async (req, res, next) => {
   console.log("Body:", req.body);
   console.log("File:", req.file);
   const { name } = req.body;
-
 
   // check if name exists and is a string
   if (!name || typeof name != "string") {
@@ -50,7 +31,6 @@ const addCategory = async (req, res, next) => {
     replacement: "_",
     lower: true,
   });
-
 
   // const categoryExists = await Category.findOne({ slug });
   // if (categoryExists){
@@ -89,13 +69,28 @@ const addCategory = async (req, res, next) => {
   });
 };
 
-const getAllCategories = async (req, res, next) => {
-  let categories = await Category.find();
-  res.json({ message: "successfully found all categories.", categories });
-};
+// const getAllCategories = async (req, res, next) => {
+//   let categories = await Category.find();
+//   res.json({ message: "successfully found all categories.", categories });
+// };
 
+/**
+ * @api {GET} Get single category (by name, id, or slug)
+ */
 const getSingleCategory = async (req, res, next) => {
-  let category = await Category.findById(req.params.id);
+  // Destructure queries from request
+  const { id, name, slug } = req.query;
+
+  // Prep query object
+  let queryFinder = {};
+  if (id) queryFinder.id = id;
+  if (name) queryFinder.name = name;
+  if (slug) queryFinder.slug = slug;
+
+  // Find by query object
+  let category = await Category.findOne(queryFinder);
+
+  // Response
   res.json({ message: "successfully found single category.", category });
 };
 
@@ -121,7 +116,7 @@ const deleteSingleCategory = async (req, res, next) => {
 
 export {
   addCategory,
-  getAllCategories,
+  // getAllCategories,
   getSingleCategory,
   deleteSingleCategory,
   updateSingleCategory,
