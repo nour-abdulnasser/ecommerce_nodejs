@@ -6,7 +6,7 @@ This project uses:
 - Expressjs for handling routing and middleware.
 - NoSQL database (MongoDB) to store data, such as user or product data.
 - Mongoose (an Object Data Modelling library for MongoDB) for:
-    -   `{ Schema, model } for defining the models.
+    -   `{ Schema, model }` for defining the models.
  
 ## Installation and Setup
 1. Clone repository
