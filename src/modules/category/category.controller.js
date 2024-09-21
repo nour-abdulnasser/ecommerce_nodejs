@@ -69,6 +69,10 @@ const addCategory = async (req, res, next) => {
   });
 };
 
+
+/**
+ * @api {GET} get all categories
+ */
 // const getAllCategories = async (req, res, next) => {
 //   let categories = await Category.find();
 //   res.json({ message: "successfully found all categories.", categories });
