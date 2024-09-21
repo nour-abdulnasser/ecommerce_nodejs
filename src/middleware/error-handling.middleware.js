@@ -1,4 +1,9 @@
-import { ErrorClass } from "../utils/bootstrap.js";
+// import * as utils from "../utils/index.js";
+
+// const { ErrorClass } = utils;
+
+import { ErrorClass } from "../utils/index.js";
+
 
 export function catchError(API) {
   return (req, res, next) => {

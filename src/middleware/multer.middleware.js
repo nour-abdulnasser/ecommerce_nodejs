@@ -1,9 +1,11 @@
-import multer from "multer";
 import fs from "fs";
 import path from "path";
+
+import multer from "multer";
 import { DateTime } from "luxon";
 import { v4 as uuidv4 } from "uuid"; // we can also use nanoid
-import { ErrorClass, extensions } from "../utils/bootstrap.js";
+
+import { ErrorClass, extensions } from "../utils/index.js";
 
 export const multerMiddleware = ({
   filePath = "general",

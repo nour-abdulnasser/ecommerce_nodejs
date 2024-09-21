@@ -15,15 +15,15 @@ const schema = new mongoose.Schema(
       required: true,
     },
     category: {
-      type: Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "Category",
     },
     createdBy: {
-      type: Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       ref: "User",
     },
   },
   { timestamps: true, versionKey: false }
 );
 
-export const SubCategory = mongoose.model("SubCategory", schema); // dont forget to capitalize the name
+export const Subcategory = mongoose.model("SubCategory", schema); // dont forget to capitalize the name
