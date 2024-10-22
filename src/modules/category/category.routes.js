@@ -27,10 +27,16 @@ categoryRouter
   )
   // .get(getAllCategories)
   .get(getSingleCategory);
+categoryRouter.route("/:id").delete(deleteSingleCategory, globalErrorHandler);
 categoryRouter
-  .route("/:id")
-
-  .delete(deleteSingleCategory)
-  .put(updateSingleCategory);
+  .route("/update/:_id")
+  .put(
+    middleware
+      .multerHost({ allowedExtensions: utils.extensions.Images })
+      .single("image"),
+    middleware.getDocumentByName(Category),
+    updateSingleCategory,
+    globalErrorHandler
+  );
 
 export default categoryRouter;
