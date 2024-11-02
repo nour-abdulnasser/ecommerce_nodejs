@@ -14,16 +14,34 @@ const schema = new mongoose.Schema(
       lowercase: true,
       required: true,
     },
-    category: {
-      type: mongoose.Types.ObjectId,
+    images: {
+      secure_url: {
+        type: String,
+        unique: true,
+        required: true,
+      },
+      public_id: {
+        required: true,
+        type: String,
+        unique: true,
+      },
+    },
+    customId: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
+      required: true,
     },
     createdBy: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
   },
   { timestamps: true, versionKey: false }
 );
 
-export const Subcategory = mongoose.model("SubCategory", schema); // dont forget to capitalize the name
+export const SubCategory = mongoose.model("SubCategory", schema); // dont forget to capitalize the name

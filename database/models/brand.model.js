@@ -14,7 +14,33 @@ const schema = new mongoose.Schema(
       lowercase: true,
       required: true,
     },
-    logo: String,
+    logo: {
+      secure_url: {
+        type: String,
+        required: true,
+        unique: true,
+      },
+      public_id: {
+        type: String,
+        required: true,
+        unique: true,
+      },
+    },
+    customId: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+    subCategoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SubCategory",
+      required: true,
+    },
   },
   { timestamps: true, versionKey: false }
 );

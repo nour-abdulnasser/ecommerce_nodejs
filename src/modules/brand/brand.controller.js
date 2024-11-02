@@ -1,52 +1,119 @@
-// import { Category } from "../../../database/models/brand.model.js";
-// import slugify from "slugify";
-// const addCategory = async (req, res, next) => {
-//   let category = new Category(req.body); // a new instance of Category, req.body is what we want to store
-//   console.log(category); // {name: "nour"}
+import slugify from "slugify";
+import { v4 as uuidv4 } from "uuid";
 
-//   // you can make changes here before saving
-//   //   category.name = "noura";
+import { Brand } from "../../../database/models/brand.model.js";
+import { cloudinaryConfig, ErrorClass } from "../../utils/index.js";
 
-//   await category.save(); // document is saved
-//   console.log(category); // {name: "nour", createdAt: xxx}
+/**
+ *
+ * @api {POST}  Create a new brand
+ *
+ * /brands
+ *
+ */
+export const addBrand = async (req, res, next) => {
+  // Not sure if we should check on category..
+  const { _id, subCategoryId, categoryId } = req.query;
+  const brand = await Brand.findById({ _id });
 
-//   res.json({ message: "successfully saved one category.", category });
-// };
+  if (brand) {
+    return next(
+      new ErrorClass("Brand already exists.", 400, "Brand already exists.")
+    );
+  }
 
-// const getAllCategories = async (req, res, next) => {
-//   let categories = await Category.find();
-//   res.json({ message: "successfully found all categories.", categories });
-// };
+  if (!req.file) {
+    return next(
+      new ErrorClass("Please upload an image.", 400, "Please upload an image.")
+    );
+  }
 
-// const getSingleCategory = async (req, res, next) => {
-//   let category = await Category.findById(req.params.id);
-//   res.json({ message: "successfully found single category.", category });
-// };
+  const subCategory = await subCategory
+    .findById({ _id: subCategoryId, categoryId })
+    .populate("categoryId");
 
-// const updateSingleCategory = async (req, res, next) => {
-//   req.body.slug = slugify(req.body.name);
-//   //   let category = await Category.findByIdAndUpdate(req.params.id, req.body, {
-//   //     new: true,
-//   //   });
-//   let category = await Category.findByIdAndUpdate(req.params.id, req.body);
-//   res.json({
-//     message: "successfully found and updated single category.",
-//     category,
-//   });
-// };
+  if (!subCategory) {
+    return next(
+      new ErrorClass(
+        "Subcategory does not exist. Please create the new subCategory first.",
+        400,
+        "Subcategory does not exist. Please create the new subCategory first."
+      )
+    );
+  }
 
-// const deleteSingleCategory = async (req, res, next) => {
-//   let category = await Category.findByIdAndDelete(req.params.id);
-//   res.json({
-//     message: "successfully found and deleted single category.",
-//     category,
-//   });
-// };
+  const { name } = req.body;
+  const slug = slugify(name, {
+    replacement: "_",
+    lower: true,
+  });
 
-// export {
-//   addCategory,
-//   getAllCategories,
-//   getSingleCategory,
-//   deleteSingleCategory,
-//   updateSingleCategory,
-// };
+  const customId = uuidv4();
+
+  const { secure_url, public_id } = await cloudinaryConfig().uploader.upload({
+    file: req.file.path,
+    folder: `${process.env.UPLOADS_FOLDER}/Categories/${subCategory.categoryId.customId}/Subcategories/${subCategory.customId}/Brands/${customId}`,
+  });
+
+  const brandObject = {
+    logo: {
+      secure_url,
+      public_id,
+    },
+    name,
+    slug,
+    categoryId: subCategory.categoryId._id,
+    subCategoryId: subCategoryId._id,
+    customId,
+  };
+
+  const newBrand = await Brand.create(brandObject);
+
+  res.status(200).json({
+    message: "Brand created successfully.",
+    status: "success",
+    statusCode: 200,
+    data: newBrand,
+  });
+};
+
+/**
+ *
+ * @api {GET}  get a single brand
+ *
+ * /brands
+ *
+ */
+export const getBrand = async (req, res, next) => {
+  const { id, name, slug } = req.query;
+  const queryFilter = {}
+
+  if(id) queryFilter._id = id
+  if(name) queryFilter.name = name
+  if(slug) queryFilter.slug = slug
+
+
+  const brand = await Brand.findOne(queryFilter);
+
+  if (!brand){
+    return next(
+        new ErrorClass("Brand not found.", 400, "Brand not found.")
+      );
+  }
+  res.status(200).json({
+    message: "Brand found successfully.",
+    status: "success",
+    statusCode: 200,
+    data: brand,
+  });
+};
+
+
+/**
+ *
+ * @api {GET}  get a single brand
+ *
+ * /brands
+ *
+ */
+

@@ -1,23 +1,42 @@
-// import { Router } from "express";
-// import {
-//   addCategory,
-//   deleteSingleCategory,
-//   getAllCategories,
-//   getSingleCategory,
-//   updateSingleCategory,
-// } from "./subcategory.controller.js";
+import Router from "express";
 
-// const subcategoryRouter = Router();
+import * as middleware from "../../middleware/index.js";
 
-// subcategoryRouter
-//   .route("/") // remember in bootstrap we use '/api/categories'. this is a continuation of that path
-//   .post(addCategory)
-//   .get(getAllCategories);
+import {
+  addSingleSubCategory,
+  getSubCategory,
+  updateSubCategory,
+  deleteSubCategory
+} from "../subcategory/subcategory.controller.js";
+import { SubCategory } from "../../../database/models/index.js";
+import { extensions } from "../../utils/file-extensions.utils.js";
 
-// subcategoryRouter
-//   .route("/:id")
-//   .get(getSingleCategory)
-//   .delete(deleteSingleCategory)
-//   .put(updateSingleCategory);
+const subCategoryRouter = Router();
+const { multerHost, globalErrorHandler, getDocumentByName } = middleware;
 
-// export default subcategoryRouter;
+subCategoryRouter.post(
+  "/",
+  multerHost({ allowedExtensions: extensions.Images }).single("image"),
+  getDocumentByName(SubCategory),
+  addSingleSubCategory,
+  globalErrorHandler
+);
+
+subCategoryRouter.get(
+  "/",
+  // getDocumentByName(SubCategory), // This caused request timeout.
+  getSubCategory,
+  globalErrorHandler
+);
+
+subCategoryRouter.put(
+  "/:_id",
+  multerHost({ allowedExtensions: extensions.Images }).single("image"),
+  getDocumentByName(SubCategory),
+  updateSubCategory,
+  globalErrorHandler
+);
+subCategoryRouter.delete("/:_id", deleteSubCategory, globalErrorHandler);
+
+
+export default subCategoryRouter;

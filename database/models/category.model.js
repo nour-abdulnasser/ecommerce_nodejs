@@ -23,6 +23,7 @@ const categorySchema = new Schema(
       required: false, // To Do: Change to true after adding authentication
     },
     images: {
+      //this is different to the field name
       secure_url: {
         type: String,
         required: true,
@@ -33,15 +34,15 @@ const categorySchema = new Schema(
         unique: true,
       },
     },
-    customId: 
-    // if you wanted to change category name,
-    // you will need to also change it in the controller.
-    // using an id instead unique to each each category is less of a hassle.
-     {
-      type: String,
-      unique: true,
-      required: true,
-    },
+    customId:
+      // if you wanted to change category name,
+      // you will need to also change it in the controller.
+      // using an id instead unique to each each category is less of a hassle.
+      {
+        type: String,
+        unique: true,
+        required: true,
+      },
   },
   { timestamps: true, versionKey: false }
 );
